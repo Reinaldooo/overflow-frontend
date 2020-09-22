@@ -1,14 +1,11 @@
 import styled, { keyframes } from "styled-components";
 //
-import signInBackground from "../../assets/sign-in-back.svg";
 
 const fadeIn = keyframes`
 from {
-  transform: translateY(-20px);
-  opacity: .5;
+  opacity: .2;
 }
 to {
-  transform: translateY(0);
   opacity: 1;
 }
 `;
@@ -25,8 +22,7 @@ export const Content = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 700px;
-  animation: ${fadeIn} 0.3s;
+  animation: ${fadeIn} 0.5s;
 
   form {
     margin: 80px 0;
@@ -38,23 +34,11 @@ export const Content = styled.div`
       font-weight: 400;
       font-size: 20px;
     }
-
-    a {
-      color: #fff;
-      display: block;
-      margin-top: 20px;
-      text-decoration: none;
-      transition: opacity 0.5s;
-
-      &:hover {
-        opacity: 0.6;
-      }
-    }
   }
 
   > a {
     color: #fff;
-    margin-top: 20px;
+    margin-top: -20px;
     text-decoration: none;
     transition: opacity 0.5s;
     display: flex;
@@ -71,10 +55,4 @@ export const Content = styled.div`
   > img {
     height: 100px;
   }
-`;
-
-export const Background = styled.div`
-  flex: 1;
-  background: url(${signInBackground}) no-repeat center;
-  background-size: 85%;
 `;
