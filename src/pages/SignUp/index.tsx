@@ -18,7 +18,7 @@ import getValidationErrors from "../../utils/getValidationErrors";
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const handleSubmit = useCallback(async (data: object): Promise<void> => {
-    // Unforma will automatically prevent default.
+    // Unform will automatically prevent default.
     try {
       formRef.current?.setErrors({});
 

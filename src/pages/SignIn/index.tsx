@@ -1,24 +1,44 @@
-import React from "react";
+import React, { useCallback, useRef } from "react";
 import { Form } from "@unform/web";
+import { FormHandles } from "@unform/core";
 import { AiOutlineLogin, AiFillMail, AiFillLock } from "react-icons/ai";
+import * as Yup from "yup";
 //
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import logo from "../../assets/logo.svg";
 import { Container, Content, Background } from "./styles";
+import getValidationErrors from "../../utils/getValidationErrors";
 
 const SignIn: React.FC = () => {
-  const handleSubmit = (data: object): void => {
-    // Unforma will automatically prevent default.
-    console.log(data);
-  };
+  const formRef = useRef<FormHandles>(null);
+  const handleSubmit = useCallback(async (data: object): Promise<void> => {
+    // Unform will automatically prevent default.
+    try {
+      formRef.current?.setErrors({});
+
+      const schema = Yup.object().shape({
+        email: Yup.string()
+          .required("Email obrigatório.")
+          .email("Email inválido."),
+        passwd: Yup.string().required("Senha obrigatória"),
+      });
+      await schema.validate(data, { abortEarly: false });
+      console.log(data);
+    } catch (err) {
+      const errors = getValidationErrors(err);
+      // This is the way to set error with unform. Each key is the input name and
+      // it will be set on the error var coming from the useField hook in the Comp
+      formRef.current?.setErrors(errors);
+    }
+  }, []);
 
   return (
     <Container>
       <Content>
         <img src={logo} alt="logo" />
         {/* Unform container */}
-        <Form onSubmit={handleSubmit}>
+        <Form ref={formRef} onSubmit={handleSubmit}>
           <h1>Faça seu login</h1>
           <Input
             name="email"

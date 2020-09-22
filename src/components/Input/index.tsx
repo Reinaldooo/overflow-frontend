@@ -1,8 +1,9 @@
 import React, { InputHTMLAttributes, useEffect, useRef, useState } from "react";
 import { IconBaseProps } from "react-icons";
+import { FiAlertTriangle } from "react-icons/fi";
 import { useField } from "@unform/core";
 //
-import { Container } from "./styles";
+import { Container, ErrorTooltip } from "./styles";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
@@ -24,7 +25,7 @@ const Input: React.FC<InputProps> = ({ icon: Icon, name, ...rest }) => {
   }, [fieldName, registerField]);
 
   return (
-    <Container isFocused={isFocused}>
+    <Container isFocused={isFocused} isErrored={!!error}>
       {Icon && <Icon size={20} />}
       <input
         onFocus={() => setFocused(true)}
@@ -33,7 +34,11 @@ const Input: React.FC<InputProps> = ({ icon: Icon, name, ...rest }) => {
         defaultValue={defaultValue}
         {...rest}
       />
-      {error}
+      {error && (
+        <ErrorTooltip title={error}>
+          <FiAlertTriangle size={20} />
+        </ErrorTooltip>
+      )}
     </Container>
   );
 };
