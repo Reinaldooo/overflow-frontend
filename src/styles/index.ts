@@ -1,8 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 
-export default createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap');
-  
+export default createGlobalStyle`  
   * {
     margin: 0;
     padding: 0;
