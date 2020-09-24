@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useRef, useContext } from "react";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
 import { AiOutlineLogin, AiFillMail, AiFillLock } from "react-icons/ai";
@@ -9,10 +9,18 @@ import Input from "../../components/Input";
 import logo from "../../assets/logo.svg";
 import { Container, Content, Background } from "./styles";
 import getValidationErrors from "../../utils/getValidationErrors";
+import { AuthContext } from "../../context/authContext";
+
+interface SignInForm {
+  email: string;
+  passwd: string;
+}
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const handleSubmit = useCallback(async (data: object): Promise<void> => {
+  const { user, signIn } = useContext(AuthContext);
+  console.log(user);
+  const handleSubmit = async (data: SignInForm): Promise<void> => {
     // Unform will automatically prevent default.
     try {
       formRef.current?.setErrors({});
@@ -24,14 +32,17 @@ const SignIn: React.FC = () => {
         passwd: Yup.string().required("Senha obrigatória"),
       });
       await schema.validate(data, { abortEarly: false });
-      console.log(data);
+      signIn({
+        email: data.email,
+        passwd: data.passwd,
+      });
     } catch (err) {
       const errors = getValidationErrors(err);
       // This is the way to set error with unform. Each key is the input name and
       // it will be set on the error var coming from the useField hook in the Comp
       formRef.current?.setErrors(errors);
     }
-  }, []);
+  };
 
   return (
     <Container>
