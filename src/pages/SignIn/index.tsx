@@ -9,7 +9,8 @@ import Input from "../../components/Input";
 import logo from "../../assets/logo.svg";
 import { Container, Content, Background } from "./styles";
 import getValidationErrors from "../../utils/getValidationErrors";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../context/authContext";
+import { useToast } from "../../context/toastContext";
 
 interface SignInForm {
   email: string;
@@ -19,6 +20,7 @@ interface SignInForm {
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { signIn } = useAuth();
+  const { addToast, removeToast } = useToast();
   const handleSubmit = async (data: SignInForm): Promise<void> => {
     // Unform will automatically prevent default.
     try {
@@ -33,10 +35,12 @@ const SignIn: React.FC = () => {
       });
       await schema.validate(data, { abortEarly: false });
 
-      signIn({
+      await signIn({
         email: data.email,
         passwd: data.passwd,
       });
+      addToast();
+      removeToast();
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);

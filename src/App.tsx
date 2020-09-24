@@ -4,16 +4,14 @@ import React from "react";
 import SignIn from "./pages/SignIn";
 // import SignUp from "./pages/SignUp";
 import GlobalStyles from "./styles";
-import { AuthProvider } from "./hooks/useAuth";
-import ToastContainer from "./components/ToastContainer";
+import ContextProvider from "./context";
 
 function App() {
   return (
     <>
-      <AuthProvider>
+      <ContextProvider>
         <SignIn />
-      </AuthProvider>
-      <ToastContainer />
+      </ContextProvider>
       <GlobalStyles />
     </>
   );
