@@ -17,9 +17,10 @@ import getValidationErrors from "../../utils/getValidationErrors";
 
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const handleSubmit = useCallback(async (data: object): Promise<void> => {
+  const handleSubmit = async (data: object): Promise<void> => {
     // Unform will automatically prevent default.
     try {
+      // Start with a clean state
       formRef.current?.setErrors({});
 
       const schema = Yup.object().shape({
@@ -36,7 +37,7 @@ const SignUp: React.FC = () => {
       // it will be set on the error var coming from the useField hook in the Comp
       formRef.current?.setErrors(errors);
     }
-  }, []);
+  };
 
   return (
     <Container>

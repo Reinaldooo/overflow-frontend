@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 //
 import api from "../services/api";
 
@@ -10,6 +10,7 @@ interface SignInCredentials {
 interface AuthContextData {
   user: object;
   signIn(credentials: SignInCredentials): Promise<void>;
+  signOut(): void;
 }
 
 interface AuthState {
@@ -17,17 +18,17 @@ interface AuthState {
   user: object;
 }
 
-export const AuthContext = createContext<AuthContextData>(
-  {} as AuthContextData
-);
+const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-export const AuthProvider: React.FC = ({ children }) => {
-  const [data, setDate] = useState(() => {
+const AuthProvider: React.FC = ({ children }) => {
+  const [data, setData] = useState(() => {
     const token = localStorage.getItem("@main:token");
     const user = localStorage.getItem("@main:user");
+
     if (token && user) {
       return { token, user: JSON.parse(user) };
     }
+
     return {} as AuthState;
   });
   const signIn = async ({ email, passwd }: SignInCredentials) => {
@@ -35,16 +36,31 @@ export const AuthProvider: React.FC = ({ children }) => {
       email,
       passwd,
     });
+
     const { token, user } = res.data;
+
     localStorage.setItem("@main:token", token);
     localStorage.setItem("@main:user", JSON.stringify(user));
 
-    setDate({ token, user });
+    setData({ token, user });
+  };
+
+  const signOut = async () => {
+    localStorage.removeItem("@main:token");
+    localStorage.removeItem("@main:user");
+
+    setData({} as AuthState);
   };
 
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn }}>
+    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+function useAuth(): AuthContextData {
+  return useContext(AuthContext);
+}
+
+export { useAuth, AuthProvider };

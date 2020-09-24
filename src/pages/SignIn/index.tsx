@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from "react";
+import React, { useRef } from "react";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
 import { AiOutlineLogin, AiFillMail, AiFillLock } from "react-icons/ai";
@@ -9,7 +9,7 @@ import Input from "../../components/Input";
 import logo from "../../assets/logo.svg";
 import { Container, Content, Background } from "./styles";
 import getValidationErrors from "../../utils/getValidationErrors";
-import { AuthContext } from "../../context/authContext";
+import { useAuth } from "../../hooks/authContext";
 
 interface SignInForm {
   email: string;
@@ -18,11 +18,11 @@ interface SignInForm {
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const { user, signIn } = useContext(AuthContext);
-  console.log(user);
+  const { signIn } = useAuth();
   const handleSubmit = async (data: SignInForm): Promise<void> => {
     // Unform will automatically prevent default.
     try {
+      // Start with a clean state
       formRef.current?.setErrors({});
 
       const schema = Yup.object().shape({
@@ -32,6 +32,7 @@ const SignIn: React.FC = () => {
         passwd: Yup.string().required("Senha obrigatória"),
       });
       await schema.validate(data, { abortEarly: false });
+
       signIn({
         email: data.email,
         passwd: data.passwd,
