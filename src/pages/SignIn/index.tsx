@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
 import { AiOutlineLogin, AiFillMail, AiFillLock } from "react-icons/ai";
+import { Link } from "react-router-dom";
 import * as Yup from "yup";
 //
 import Button from "../../components/Button";
@@ -76,10 +77,10 @@ const SignIn: React.FC = () => {
           <Button type="submit">Entrar</Button>
           <a href="/">Esqueci a senha</a>
         </Form>
-        <a href="/">
+        <Link to="/signup">
           <AiOutlineLogin size={25} />
           Criar conta
-        </a>
+        </Link>
       </Content>
       <Background></Background>
     </Container>

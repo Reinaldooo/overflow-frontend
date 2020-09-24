@@ -11,7 +11,7 @@ import * as S from "./styles";
 
 interface ToastProps {
   toast: ToastMessage;
-  type?: "error" | "success";
+  style: Object;
 }
 
 const iconTypes = {
@@ -20,7 +20,7 @@ const iconTypes = {
   info: <FiInfo size={20} />,
 };
 
-const Toast: React.FC<ToastProps> = ({ toast, type }) => {
+const Toast: React.FC<ToastProps> = ({ toast, style }) => {
   const { removeToast } = useToast();
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const Toast: React.FC<ToastProps> = ({ toast, type }) => {
   }, [toast.id, removeToast]);
 
   return (
-    <S.Container type={type}>
+    <S.Container type={toast.type} style={style}>
       {iconTypes[toast.type || "info"]}
       <div>
         <strong>{toast.title}</strong>
