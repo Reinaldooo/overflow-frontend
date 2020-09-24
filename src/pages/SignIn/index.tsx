@@ -20,8 +20,12 @@ interface SignInForm {
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { signIn } = useAuth();
-  const { addToast, removeToast } = useToast();
+  const { addToast } = useToast();
   const handleSubmit = async (data: SignInForm): Promise<void> => {
+    addToast({
+      title: "Eii",
+      message: "Wow",
+    });
     // Unform will automatically prevent default.
     try {
       // Start with a clean state
@@ -39,8 +43,6 @@ const SignIn: React.FC = () => {
         email: data.email,
         passwd: data.passwd,
       });
-      addToast();
-      removeToast();
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);

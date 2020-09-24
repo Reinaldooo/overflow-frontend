@@ -1,24 +1,42 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
+import shortid from "shortid";
 //
 import ToastContainer from "../components/ToastContainer";
 
+export interface ToastMessage {
+  id: string;
+  // "info" is default
+  type?: "success" | "error";
+  title: string;
+  message?: string;
+}
+
 interface ToastContextData {
-  addToast(): void;
-  removeToast(): void;
+  addToast(message: Omit<ToastMessage, "id">): void;
+  removeToast(id: string): void;
+  toasts: ToastMessage[];
 }
 
 const ToastContext = createContext<ToastContextData>({} as ToastContextData);
 
 const ToastProvider: React.FC = ({ children }) => {
-  const addToast = () => {
-    console.log("AddToast");
+  const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const addToast = ({ title, type, message }: Omit<ToastMessage, "id">) => {
+    const id = shortid();
+    const toast = {
+      id,
+      title,
+      message,
+      type,
+    };
+    setToasts((oldState) => [...oldState, toast]);
   };
-  const removeToast = () => {
-    console.log("RemoveToast");
+  const removeToast = (id: string) => {
+    setToasts((oldState) => oldState.filter((toast) => toast.id !== id));
   };
 
   return (
-    <ToastContext.Provider value={{ addToast, removeToast }}>
+    <ToastContext.Provider value={{ addToast, removeToast, toasts }}>
       {children}
       <ToastContainer />
     </ToastContext.Provider>
