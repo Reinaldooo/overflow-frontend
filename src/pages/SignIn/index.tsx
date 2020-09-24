@@ -9,7 +9,7 @@ import Input from "../../components/Input";
 import logo from "../../assets/logo.svg";
 import { Container, Content, Background } from "./styles";
 import getValidationErrors from "../../utils/getValidationErrors";
-import { useAuth } from "../../hooks/authContext";
+import { useAuth } from "../../hooks/useAuth";
 
 interface SignInForm {
   email: string;

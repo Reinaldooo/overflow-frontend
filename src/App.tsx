@@ -4,7 +4,7 @@ import React from "react";
 import SignIn from "./pages/SignIn";
 // import SignUp from "./pages/SignUp";
 import GlobalStyles from "./styles";
-import { AuthProvider } from "./hooks/authContext";
+import { AuthProvider } from "./hooks/useAuth";
 
 function App() {
   return (
