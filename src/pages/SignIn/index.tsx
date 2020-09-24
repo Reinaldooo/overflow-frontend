@@ -23,10 +23,6 @@ const SignIn: React.FC = () => {
   const { signIn } = useAuth();
   const { addToast } = useToast();
   const handleSubmit = async (data: SignInForm): Promise<void> => {
-    addToast({
-      title: "Eii",
-      message: "Wow",
-    });
     // Unform will automatically prevent default.
     try {
       // Start with a clean state
@@ -44,6 +40,9 @@ const SignIn: React.FC = () => {
         email: data.email,
         passwd: data.passwd,
       });
+      addToast({
+        title: "Bem-vindo!",
+      });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
@@ -51,7 +50,11 @@ const SignIn: React.FC = () => {
         // it will be set on the error var coming from the useField hook in the Comp
         formRef.current?.setErrors(errors);
       }
-      // Toast
+      addToast({
+        title: "Ops, algo deu errado!",
+        type: "error",
+        message: "Por favor tente novamente.",
+      });
     }
   };
 
