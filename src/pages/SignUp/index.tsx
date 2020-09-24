@@ -7,18 +7,28 @@ import {
 } from "react-icons/ai";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import * as Yup from "yup";
 //
 import Button from "../../components/Button";
 import Input from "../../components/Input";
+import { useToast } from "../../context/toastContext";
 import logo from "../../assets/logo.svg";
 import { Container, Content } from "./styles";
 import getValidationErrors from "../../utils/getValidationErrors";
+import api from "../../services/api";
+
+interface SignUpFormData {
+  name: string;
+  email: string;
+  passwd: string;
+}
 
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const handleSubmit = async (data: object): Promise<void> => {
+  const { addToast } = useToast();
+  const history = useHistory();
+  const handleSubmit = async (data: SignUpFormData): Promise<void> => {
     // Unform will automatically prevent default.
     try {
       // Start with a clean state
@@ -32,11 +42,26 @@ const SignUp: React.FC = () => {
         passwd: Yup.string().min(4, "Mínimo 4 digitos"),
       });
       await schema.validate(data, { abortEarly: false });
+
+      await api.post("users", data);
+
+      history.push("/");
+      addToast({
+        title: "Cadastro realizado com sucesso!",
+        type: "success",
+      });
     } catch (err) {
-      const errors = getValidationErrors(err);
-      // This is the way to set error with unform. Each key is the input name and
-      // it will be set on the error var coming from the useField hook in the Comp
-      formRef.current?.setErrors(errors);
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
+        // This is the way to set error with unform. Each key is the input name and
+        // it will be set on the error var coming from the useField hook in the Comp
+        formRef.current?.setErrors(errors);
+      }
+      addToast({
+        title: "Ops, algo deu errado!",
+        type: "error",
+        message: "Por favor tente novamente.",
+      });
     }
   };
 
