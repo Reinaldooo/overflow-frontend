@@ -5,6 +5,7 @@ import SignIn from "./pages/SignIn";
 // import SignUp from "./pages/SignUp";
 import GlobalStyles from "./styles";
 import { AuthProvider } from "./hooks/useAuth";
+import ToastContainer from "./components/ToastContainer";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <AuthProvider>
         <SignIn />
       </AuthProvider>
+      <ToastContainer />
       <GlobalStyles />
     </>
   );

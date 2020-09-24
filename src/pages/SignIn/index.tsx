@@ -38,10 +38,13 @@ const SignIn: React.FC = () => {
         passwd: data.passwd,
       });
     } catch (err) {
-      const errors = getValidationErrors(err);
-      // This is the way to set error with unform. Each key is the input name and
-      // it will be set on the error var coming from the useField hook in the Comp
-      formRef.current?.setErrors(errors);
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
+        // This is the way to set error with unform. Each key is the input name and
+        // it will be set on the error var coming from the useField hook in the Comp
+        formRef.current?.setErrors(errors);
+      }
+      // Toast
     }
   };
 
