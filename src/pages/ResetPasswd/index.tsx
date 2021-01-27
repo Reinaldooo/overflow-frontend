@@ -1,48 +1,62 @@
 import React, { useRef } from "react";
+import { AiFillLock } from "react-icons/ai";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
-import { AiOutlineLogin, AiFillMail, AiFillLock } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import * as Yup from "yup";
 //
 import Button from "../../components/Button";
 import Input from "../../components/Input";
-import logo from "../../assets/logo.svg";
-import { Container, Content, Background } from "./styles";
-import getValidationErrors from "../../utils/getValidationErrors";
-import { useAuth } from "../../context/authContext";
 import { useToast } from "../../context/toastContext";
+import logo from "../../assets/logo.svg";
+import { Container, Content } from "./styles";
+import getValidationErrors from "../../utils/getValidationErrors";
+import api from "../../services/api";
 
-interface SignInForm {
-  email: string;
+interface SignUpFormData {
   passwd: string;
+  passwd_confirmation: string;
 }
 
-const SignIn: React.FC = () => {
+interface ParamsData {
+  tokenId: string;
+}
+
+const ResetPasswd: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const { signIn } = useAuth();
+  const { tokenId } = useParams<ParamsData>();
+  const history = useHistory();
   const { addToast } = useToast();
-  const handleSubmit = async (data: SignInForm): Promise<void> => {
+
+  const handleSubmit = async (data: SignUpFormData): Promise<void> => {
     // Unform will automatically prevent default.
     try {
       // Start cleaning errors
       formRef.current?.setErrors({});
 
       const schema = Yup.object().shape({
-        email: Yup.string()
-          .required("Email obrigatório.")
-          .email("Email inválido."),
-        passwd: Yup.string().required("Senha obrigatória"),
+        passwd: Yup.string().min(4, "Mínimo 4 digitos"),
+        passwd_confirmation: Yup.string().oneOf(
+          [Yup.ref("passwd")],
+          "As senhas não são iguais."
+        ),
       });
+
       await schema.validate(data, { abortEarly: false });
 
-      await signIn({
-        email: data.email,
+      await api.post("passwd/reset", {
         passwd: data.passwd,
+        tokenId,
       });
+
       addToast({
-        title: "Bem-vindo!",
+        title: "Senha atualizada com sucesso!",
+        type: "success",
       });
+
+      setTimeout(() => {
+        history.push("/");
+      }, 600);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
@@ -64,30 +78,24 @@ const SignIn: React.FC = () => {
         <img src={logo} alt="logo" />
         {/* Unform container */}
         <Form ref={formRef} onSubmit={handleSubmit}>
-          <h1>Faça seu login</h1>
-          <Input
-            name="email"
-            icon={AiFillMail}
-            placeholder="Email"
-            type="text"
-          />
+          <h1>Escolha uma nova senha</h1>
           <Input
             name="passwd"
             icon={AiFillLock}
             placeholder="Senha"
             type="password"
           />
-          <Button type="submit">Entrar</Button>
-          <Link to="/passwd-forgot">Esqueci a senha</Link>
+          <Input
+            name="passwd_confirmation"
+            icon={AiFillLock}
+            placeholder="Confirmar senha"
+            type="password"
+          />
+          <Button type="submit">Resetar</Button>
         </Form>
-        <Link to="/signup">
-          <AiOutlineLogin size={25} />
-          Criar conta
-        </Link>
       </Content>
-      <Background></Background>
     </Container>
   );
 };
 
-export default SignIn;
+export default ResetPasswd;

@@ -31,7 +31,7 @@ const SignUp: React.FC = () => {
   const handleSubmit = async (data: SignUpFormData): Promise<void> => {
     // Unform will automatically prevent default.
     try {
-      // Start with a clean state
+      // Start cleaning errors
       formRef.current?.setErrors({});
 
       const schema = Yup.object().shape({

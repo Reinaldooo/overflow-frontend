@@ -1,28 +1,25 @@
 import React, { useRef } from "react";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
-import { AiOutlineLogin, AiFillMail, AiFillLock } from "react-icons/ai";
+import { AiFillMail, AiOutlineArrowLeft } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 //
 import Button from "../../components/Button";
 import Input from "../../components/Input";
-import logo from "../../assets/logo.svg";
 import { Container, Content, Background } from "./styles";
 import getValidationErrors from "../../utils/getValidationErrors";
-import { useAuth } from "../../context/authContext";
 import { useToast } from "../../context/toastContext";
+import api from "../../services/api";
 
-interface SignInForm {
+interface ForgotPasswordFormData {
   email: string;
-  passwd: string;
 }
 
-const SignIn: React.FC = () => {
+const ForgotPasswd: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const { signIn } = useAuth();
   const { addToast } = useToast();
-  const handleSubmit = async (data: SignInForm): Promise<void> => {
+  const handleSubmit = async (data: ForgotPasswordFormData): Promise<void> => {
     // Unform will automatically prevent default.
     try {
       // Start cleaning errors
@@ -32,16 +29,15 @@ const SignIn: React.FC = () => {
         email: Yup.string()
           .required("Email obrigatório.")
           .email("Email inválido."),
-        passwd: Yup.string().required("Senha obrigatória"),
       });
       await schema.validate(data, { abortEarly: false });
 
-      await signIn({
-        email: data.email,
-        passwd: data.passwd,
-      });
+      await api.post("passwd/forgot", { email: data.email });
+
       addToast({
-        title: "Bem-vindo!",
+        title: "Solicitação recebida!",
+        message: "Você receberá uma mensagem caso o email seja válido.",
+        type: "success",
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
@@ -51,9 +47,9 @@ const SignIn: React.FC = () => {
         formRef.current?.setErrors(errors);
       }
       addToast({
-        title: "Ops, algo deu errado!",
+        title: "Ops, algo está errado!",
         type: "error",
-        message: "Por favor tente novamente.",
+        message: "Favor verificar os dados.",
       });
     }
   };
@@ -61,28 +57,20 @@ const SignIn: React.FC = () => {
   return (
     <Container>
       <Content>
-        <img src={logo} alt="logo" />
         {/* Unform container */}
         <Form ref={formRef} onSubmit={handleSubmit}>
-          <h1>Faça seu login</h1>
+          <h1>Recuperar senha</h1>
           <Input
             name="email"
             icon={AiFillMail}
             placeholder="Email"
             type="text"
           />
-          <Input
-            name="passwd"
-            icon={AiFillLock}
-            placeholder="Senha"
-            type="password"
-          />
-          <Button type="submit">Entrar</Button>
-          <Link to="/passwd-forgot">Esqueci a senha</Link>
+          <Button type="submit">Recuperar</Button>
         </Form>
-        <Link to="/signup">
-          <AiOutlineLogin size={25} />
-          Criar conta
+        <Link to="/">
+          <AiOutlineArrowLeft size={25} />
+          Voltar para login
         </Link>
       </Content>
       <Background></Background>
@@ -90,4 +78,4 @@ const SignIn: React.FC = () => {
   );
 };
 
-export default SignIn;
+export default ForgotPasswd;
