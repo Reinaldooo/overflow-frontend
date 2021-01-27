@@ -8,14 +8,14 @@ interface ContainerProps {
 }
 
 export const Container = styled.div<ContainerProps>`
-  background-color: #fff;
+  background-color: #4f4f4f;
   border-radius: 10px;
   width: 100%;
   padding: 5px 10px;
   display: flex;
   align-items: center;
   border: 2px solid transparent;
-  color: #999;
+  color: #fff;
 
   ${(props) =>
     props.isErrored &&
@@ -27,8 +27,8 @@ export const Container = styled.div<ContainerProps>`
   ${(props) =>
     props.isFocused &&
     css`
-      color: #025aa2;
-      border-color: #025aa2;
+      color: #46a6e0;
+      border-color: #46a6e0;
     `}
 
   input {
@@ -36,7 +36,7 @@ export const Container = styled.div<ContainerProps>`
     flex: 1;
     border: 0;
     height: 45px;
-    color: #025aa2;
+    color: #fff;
 
     &::placeholder {
       color: #999;

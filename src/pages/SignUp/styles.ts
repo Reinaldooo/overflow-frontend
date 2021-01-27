@@ -53,6 +53,6 @@ export const Content = styled.div`
   }
 
   > img {
-    height: 100px;
+    height: 80px;
   }
 `;
