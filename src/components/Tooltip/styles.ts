@@ -1,15 +1,27 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const bubble = keyframes`
+0% {
+  transform: scale(1);
+}
+50% {
+  transform: scale(1.2);
+}
+100% {
+  transform: scale(1);
+}
+`;
 
 export const Container = styled.div`
   position: relative;
+  &:hover {
+    span {
+      visibility: visible;
+    }
+  }
 
   svg {
-    /* While hovering on the svg, select the sibling and change it's opacity */
-    &:hover {
-      & + span {
-        opacity: 1;
-      }
-    }
+    animation: ${bubble} 1s infinite;
   }
 
   span {
@@ -24,7 +36,7 @@ export const Container = styled.div`
     bottom: calc(100% + 10px);
     left: 50%;
     transform: translateX(-50%);
-    opacity: 0;
+    visibility: hidden;
     transition: opacity 0.3s;
 
     &::before {
