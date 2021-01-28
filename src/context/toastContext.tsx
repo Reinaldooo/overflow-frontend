@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
 import shortid from "shortid";
 //
 import ToastContainer from "../components/ToastContainer";
@@ -31,9 +31,10 @@ const ToastProvider: React.FC = ({ children }) => {
     };
     setToasts((oldState) => [...oldState, toast]);
   };
-  const removeToast = (id: string) => {
+  // This one should be memoized since it is an dependency on "Toast" useEffect
+  const removeToast = useCallback((id: string) => {
     setToasts((oldState) => oldState.filter((toast) => toast.id !== id));
-  };
+  }, []);
 
   return (
     <ToastContext.Provider value={{ addToast, removeToast, toasts }}>

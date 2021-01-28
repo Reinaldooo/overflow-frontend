@@ -27,7 +27,6 @@ const Toast: React.FC<ToastProps> = ({ toast, style }) => {
     const timer = setTimeout(() => {
       removeToast(toast.id);
     }, 3000);
-    console.log(timer);
     // Start a timeout but cancel it if the component unmounts first. (user closing it)
     return () => clearTimeout(timer);
   }, [toast.id, removeToast]);
