@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { AiFillLock } from "react-icons/ai";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
@@ -23,6 +23,7 @@ interface ParamsData {
 }
 
 const ResetPasswd: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
   const { tokenId } = useParams<ParamsData>();
   const history = useHistory();
@@ -44,6 +45,7 @@ const ResetPasswd: React.FC = () => {
 
       await schema.validate(data, { abortEarly: false });
 
+      setLoading(true);
       await api.post("passwd/reset", {
         passwd: data.passwd,
         tokenId,
@@ -64,6 +66,7 @@ const ResetPasswd: React.FC = () => {
         // it will be set on the error var coming from the useField hook in the Comp
         formRef.current?.setErrors(errors);
       }
+      setLoading(false);
       addToast({
         title: "Ops, algo deu errado!",
         type: "error",
@@ -91,7 +94,9 @@ const ResetPasswd: React.FC = () => {
             placeholder="Confirmar senha"
             type="password"
           />
-          <Button type="submit">Resetar</Button>
+          <Button type="submit" loading={loading}>
+            Resetar
+          </Button>
         </Form>
       </S.Content>
     </S.Container>

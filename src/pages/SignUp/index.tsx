@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   AiOutlineArrowLeft,
   AiFillMail,
@@ -25,6 +25,7 @@ interface SignUpFormData {
 }
 
 const SignUp: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const history = useHistory();
@@ -43,6 +44,8 @@ const SignUp: React.FC = () => {
       });
       await schema.validate(data, { abortEarly: false });
 
+      setLoading(true);
+
       await api.post("users", data);
 
       history.push("/");
@@ -58,6 +61,7 @@ const SignUp: React.FC = () => {
         // it will be set on the error var coming from the useField hook in the Comp
         formRef.current?.setErrors(errors);
       }
+      setLoading(false);
       if (err.response?.status === 409) {
         addToast({
           title: "Ops, este email já está em uso!",
@@ -99,7 +103,9 @@ const SignUp: React.FC = () => {
             placeholder="Senha"
             type="password"
           />
-          <Button type="submit">Cadastrar</Button>
+          <Button type="submit" loading={loading}>
+            Cadastrar
+          </Button>
         </Form>
         <Link to="/">
           <AiOutlineArrowLeft size={25} />

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
 import { AiFillMail, AiOutlineArrowLeft } from "react-icons/ai";
@@ -17,6 +17,7 @@ interface ForgotPasswordFormData {
 }
 
 const ForgotPasswd: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const handleSubmit = async (data: ForgotPasswordFormData): Promise<void> => {
@@ -32,6 +33,7 @@ const ForgotPasswd: React.FC = () => {
       });
       await schema.validate(data, { abortEarly: false });
 
+      setLoading(true);
       await api.post("passwd/forgot", { email: data.email });
 
       addToast({
@@ -39,6 +41,7 @@ const ForgotPasswd: React.FC = () => {
         message: "Você receberá uma mensagem caso o email seja válido.",
         type: "success",
       });
+      setLoading(false);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
@@ -46,6 +49,7 @@ const ForgotPasswd: React.FC = () => {
         // it will be set on the error var coming from the useField hook in the Comp
         formRef.current?.setErrors(errors);
       }
+      setLoading(false);
       addToast({
         title: "Ops, algo está errado!",
         type: "error",
@@ -66,7 +70,9 @@ const ForgotPasswd: React.FC = () => {
             placeholder="Email"
             type="text"
           />
-          <Button type="submit">Recuperar</Button>
+          <Button type="submit" loading={loading}>
+            Recuperar
+          </Button>
         </Form>
         <Link to="/">
           <AiOutlineArrowLeft size={25} />

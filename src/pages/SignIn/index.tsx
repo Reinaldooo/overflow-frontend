@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
 import { AiOutlineLogin, AiFillMail, AiFillLock } from "react-icons/ai";
@@ -19,6 +19,7 @@ interface SignInForm {
 }
 
 const SignIn: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
   const { signIn } = useAuth();
   const { addToast } = useToast();
@@ -34,12 +35,15 @@ const SignIn: React.FC = () => {
           .email("Email inválido."),
         passwd: Yup.string().required("Senha obrigatória"),
       });
+
       await schema.validate(data, { abortEarly: false });
 
+      setLoading(true);
       await signIn({
         email: data.email,
         passwd: data.passwd,
       });
+
       addToast({
         title: "Bem-vindo!",
       });
@@ -50,6 +54,7 @@ const SignIn: React.FC = () => {
         // it will be set on the error var coming from the useField hook in the Comp
         formRef.current?.setErrors(errors);
       }
+      setLoading(false);
       addToast({
         title: "Ops, algo deu errado!",
         type: "error",
@@ -77,7 +82,9 @@ const SignIn: React.FC = () => {
             placeholder="Senha"
             type="password"
           />
-          <Button type="submit">Entrar</Button>
+          <Button type="submit" loading={loading}>
+            Entrar
+          </Button>
           <Link to="/passwd-forgot">Esqueci a senha</Link>
         </Form>
         <Link to="/signup">
