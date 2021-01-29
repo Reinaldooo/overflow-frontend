@@ -53,9 +53,18 @@ const SignUp: React.FC = () => {
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
+        console.log(errors);
         // This is the way to set error with unform. Each key is the input name and
         // it will be set on the error var coming from the useField hook in the Comp
         formRef.current?.setErrors(errors);
+      }
+      if (err.response?.status === 409) {
+        addToast({
+          title: "Ops, este email já está em uso!",
+          type: "error",
+        });
+        formRef.current?.setErrors({ email: "Email indisponível." });
+        return;
       }
       addToast({
         title: "Ops, algo deu errado!",
