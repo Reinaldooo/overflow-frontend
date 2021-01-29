@@ -22,6 +22,15 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState(() => {
+    const tokenExpiresIn = Number(localStorage.getItem("@main:tokenExpiresIn"));
+
+    if (tokenExpiresIn < Date.now()) {
+      localStorage.removeItem("@main:token");
+      localStorage.removeItem("@main:tokenExpiresIn");
+      localStorage.removeItem("@main:user");
+      return {} as AuthState;
+    }
+
     const token = localStorage.getItem("@main:token");
     const user = localStorage.getItem("@main:user");
 
@@ -32,15 +41,17 @@ const AuthProvider: React.FC = ({ children }) => {
 
     return {} as AuthState;
   });
+
   const signIn = async ({ email, passwd }: SignInCredentials) => {
     const res = await api.post("session", {
       email,
       passwd,
     });
 
-    const { token, user } = res.data;
+    const { token, user, expiresIn } = res.data;
 
     localStorage.setItem("@main:token", token);
+    localStorage.setItem("@main:tokenExpiresIn", expiresIn);
     localStorage.setItem("@main:user", JSON.stringify(user));
     api.defaults.headers.authorization = `Bearer ${token}`;
 
@@ -49,6 +60,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const signOut = async () => {
     localStorage.removeItem("@main:token");
+    localStorage.removeItem("@main:tokenExpiresIn");
     localStorage.removeItem("@main:user");
 
     setData({} as AuthState);
