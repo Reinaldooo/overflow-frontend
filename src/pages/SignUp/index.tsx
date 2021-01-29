@@ -14,7 +14,7 @@ import Button from "../../components/Button";
 import Input from "../../components/Input";
 import { useToast } from "../../context/toastContext";
 import logo from "../../assets/logo.svg";
-import { Container, Content } from "./styles";
+import * as S from "./styles";
 import getValidationErrors from "../../utils/getValidationErrors";
 import api from "../../services/api";
 
@@ -75,8 +75,8 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Content>
+    <S.Container>
+      <S.Content>
         <img src={logo} alt="logo" />
         {/* Unform container */}
         <Form ref={formRef} onSubmit={handleSubmit}>
@@ -105,8 +105,8 @@ const SignUp: React.FC = () => {
           <AiOutlineArrowLeft size={25} />
           Voltar para login
         </Link>
-      </Content>
-    </Container>
+      </S.Content>
+    </S.Container>
   );
 };
 

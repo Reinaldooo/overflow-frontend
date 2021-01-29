@@ -9,7 +9,7 @@ import Button from "../../components/Button";
 import Input from "../../components/Input";
 import { useToast } from "../../context/toastContext";
 import logo from "../../assets/logo.svg";
-import { Container, Content } from "./styles";
+import * as S from "./styles";
 import getValidationErrors from "../../utils/getValidationErrors";
 import api from "../../services/api";
 
@@ -73,8 +73,8 @@ const ResetPasswd: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Content>
+    <S.Container>
+      <S.Content>
         <img src={logo} alt="logo" />
         {/* Unform container */}
         <Form ref={formRef} onSubmit={handleSubmit}>
@@ -93,8 +93,8 @@ const ResetPasswd: React.FC = () => {
           />
           <Button type="submit">Resetar</Button>
         </Form>
-      </Content>
-    </Container>
+      </S.Content>
+    </S.Container>
   );
 };
 

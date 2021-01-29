@@ -7,7 +7,7 @@ import * as Yup from "yup";
 //
 import Button from "../../components/Button";
 import Input from "../../components/Input";
-import { Container, Content, Background } from "./styles";
+import * as S from "./styles";
 import getValidationErrors from "../../utils/getValidationErrors";
 import { useToast } from "../../context/toastContext";
 import api from "../../services/api";
@@ -55,8 +55,8 @@ const ForgotPasswd: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Content>
+    <S.Container>
+      <S.Content>
         {/* Unform container */}
         <Form ref={formRef} onSubmit={handleSubmit}>
           <h1>Recuperar senha</h1>
@@ -72,9 +72,9 @@ const ForgotPasswd: React.FC = () => {
           <AiOutlineArrowLeft size={25} />
           Voltar para login
         </Link>
-      </Content>
-      <Background></Background>
-    </Container>
+      </S.Content>
+      <S.Background></S.Background>
+    </S.Container>
   );
 };
 

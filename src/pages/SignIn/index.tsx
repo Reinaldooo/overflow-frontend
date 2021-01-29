@@ -8,7 +8,7 @@ import * as Yup from "yup";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import logo from "../../assets/logo.svg";
-import { Container, Content, Background } from "./styles";
+import * as S from "./styles";
 import getValidationErrors from "../../utils/getValidationErrors";
 import { useAuth } from "../../context/authContext";
 import { useToast } from "../../context/toastContext";
@@ -59,8 +59,8 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Content>
+    <S.Container>
+      <S.Content>
         <img src={logo} alt="logo" />
         {/* Unform container */}
         <Form ref={formRef} onSubmit={handleSubmit}>
@@ -84,9 +84,9 @@ const SignIn: React.FC = () => {
           <AiOutlineLogin size={25} />
           Criar conta
         </Link>
-      </Content>
-      <Background></Background>
-    </Container>
+      </S.Content>
+      <S.Background></S.Background>
+    </S.Container>
   );
 };
 

@@ -3,7 +3,7 @@ import { IconBaseProps } from "react-icons";
 import { FiAlertTriangle } from "react-icons/fi";
 import { useField } from "@unform/core";
 //
-import { Container, ErrorTooltip } from "./styles";
+import * as S from "./styles";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
@@ -25,7 +25,7 @@ const Input: React.FC<InputProps> = ({ icon: Icon, name, ...rest }) => {
   }, [fieldName, registerField]);
 
   return (
-    <Container isFocused={isFocused} isErrored={!!error}>
+    <S.Container isFocused={isFocused} isErrored={!!error}>
       {Icon && <Icon size={20} />}
       <input
         onFocus={() => setFocused(true)}
@@ -35,11 +35,11 @@ const Input: React.FC<InputProps> = ({ icon: Icon, name, ...rest }) => {
         {...rest}
       />
       {error && (
-        <ErrorTooltip title={error}>
+        <S.ErrorTooltip title={error}>
           <FiAlertTriangle size={20} />
-        </ErrorTooltip>
+        </S.ErrorTooltip>
       )}
-    </Container>
+    </S.Container>
   );
 };
 
