@@ -23,6 +23,28 @@ const Dashboard: React.FC = () => {
           </button>
         </S.UserDetails>
       </S.Header>
+      <S.Main>
+        <S.MainSection>
+          <S.Board>
+            <S.BoardTitle>Próximas aulas como tutor</S.BoardTitle>
+            <S.BoardContentSolid>Aula</S.BoardContentSolid>
+          </S.Board>
+          <S.Board>
+            <S.BoardTitle>Próximas aulas como estudante</S.BoardTitle>
+            <S.BoardContent></S.BoardContent>
+          </S.Board>
+        </S.MainSection>
+        <S.MainSection>
+          <S.Board>
+            <S.BoardTitle>Tecnologias</S.BoardTitle>
+            <S.BoardContent></S.BoardContent>
+          </S.Board>
+          <S.Board>
+            <S.BoardTitle>Tutores</S.BoardTitle>
+            <S.BoardContentSolid></S.BoardContentSolid>
+          </S.Board>
+        </S.MainSection>
+      </S.Main>
     </S.Container>
   );
 };
